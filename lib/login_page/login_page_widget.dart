@@ -25,8 +25,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController(text: 'naveen@karmaeast.com.au');
-    passwordController = TextEditingController(text: '111');
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
     passwordVisibility = false;
   }
 
@@ -337,7 +337,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         }
 
                                         _navigate = () => context.goNamedAuth(
-                                            'StorePage', mounted);
+                                            'OrderPage', mounted);
                                       } else {
                                         await showDialog(
                                           context: context,

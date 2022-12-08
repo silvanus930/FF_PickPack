@@ -68,13 +68,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, _) =>
-          appStateNotifier.loggedIn ? StorePageWidget() : StartPageWidget(),
+          appStateNotifier.loggedIn ? OrderPageWidget() : StartPageWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) =>
-              appStateNotifier.loggedIn ? StorePageWidget() : StartPageWidget(),
+              appStateNotifier.loggedIn ? OrderPageWidget() : StartPageWidget(),
           routes: [
             FFRoute(
               name: 'StartPage',
@@ -87,14 +87,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context, params) => StorePageWidget(),
             ),
             FFRoute(
-              name: 'SignInPage',
-              path: 'signInPage',
-              builder: (context, params) => SignInPageWidget(),
-            ),
-            FFRoute(
               name: 'LoginPage',
               path: 'loginPage',
               builder: (context, params) => LoginPageWidget(),
+            ),
+            FFRoute(
+              name: 'SignInPage',
+              path: 'signInPage',
+              builder: (context, params) => SignInPageWidget(),
             ),
             FFRoute(
               name: 'ForgotPassword',

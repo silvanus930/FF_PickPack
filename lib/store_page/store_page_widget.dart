@@ -31,7 +31,7 @@ class _StorePageWidgetState extends State<StorePageWidget> {
       setState(() => FFAppState().totalPackNumber = 0);
     });
 
-    storeEditController = TextEditingController(text: 'karma-east-au');
+    storeEditController = TextEditingController();
   }
 
   @override

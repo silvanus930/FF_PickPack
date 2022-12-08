@@ -28,10 +28,10 @@ class _SignInPageWidgetState extends State<SignInPageWidget> {
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController(text: 'naveen@karmaeast.com.au');
-    passwordController = TextEditingController(text: '111');
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
     passwordVisibility = false;
-    passwordConfirmController = TextEditingController(text: '111');
+    passwordConfirmController = TextEditingController();
     passwordConfirmVisibility = false;
   }
 
