@@ -1,10 +1,11 @@
-import '../auth/auth_util.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
+import '../login_page/login_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPasswordWidget extends StatefulWidget {
   const ForgotPasswordWidget({
@@ -36,6 +37,8 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryColor,
@@ -63,7 +66,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                           size: 30,
                         ),
                         onPressed: () async {
-                          context.pop();
+                          Navigator.pop(context);
                         },
                       ),
                       Align(
@@ -202,19 +205,11 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                   EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  if (emailFieldController!.text.isEmpty) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Email required!',
-                                        ),
-                                      ),
-                                    );
-                                    return;
-                                  }
-                                  await resetPassword(
-                                    email: emailFieldController!.text,
-                                    context: context,
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LoginPageWidget(),
+                                    ),
                                   );
                                 },
                                 text: 'Reset Password',

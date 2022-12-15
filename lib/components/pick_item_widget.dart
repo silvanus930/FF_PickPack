@@ -2,6 +2,7 @@ import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class PickItemWidget extends StatefulWidget {
   const PickItemWidget({
@@ -28,13 +29,16 @@ class PickItemWidget extends StatefulWidget {
 class _PickItemWidgetState extends State<PickItemWidget> {
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Align(
       alignment: AlignmentDirectional(0, 0),
       child: InkWell(
         onTap: () async {
-          setState(() => FFAppState().pickNumber = widget.pickNum!);
-          setState(
-              () => FFAppState().pickNumber = FFAppState().pickNumber + -1);
+          setState(() {
+            FFAppState().pickNumber = widget.pickNum!;
+            FFAppState().pickNumber = FFAppState().pickNumber + -1;
+          });
         },
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -77,7 +81,7 @@ class _PickItemWidgetState extends State<PickItemWidget> {
                                   widget.image!,
                                   width: 120,
                                   height: 100,
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ),

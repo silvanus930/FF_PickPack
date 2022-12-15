@@ -3,11 +3,13 @@ import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
+import '../order_pack_page/order_pack_page_widget.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class PickListPageWidget extends StatefulWidget {
   const PickListPageWidget({Key? key}) : super(key: key);
@@ -25,7 +27,9 @@ class _PickListPageWidgetState extends State<PickListPageWidget> {
     super.initState();
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      setState(() => FFAppState().showBeginPacking = false);
+      setState(() {
+        FFAppState().showBeginPacking = false;
+      });
     });
 
     textController = TextEditingController();
@@ -39,6 +43,8 @@ class _PickListPageWidgetState extends State<PickListPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryColor,
@@ -71,7 +77,7 @@ class _PickListPageWidgetState extends State<PickListPageWidget> {
                               size: 30,
                             ),
                             onPressed: () async {
-                              context.pop();
+                              Navigator.pop(context);
                             },
                           ),
                         ],
@@ -102,215 +108,36 @@ class _PickListPageWidgetState extends State<PickListPageWidget> {
                   ),
                   child: Stack(
                     children: [
-                      SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                decoration: BoxDecoration(),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.9,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          border: Border.all(
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryColor,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Expanded(
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(5, 5, 5, 5),
-                                                child: TextFormField(
-                                                  controller: textController,
-                                                  onChanged: (_) =>
-                                                      EasyDebounce.debounce(
-                                                    'textController',
-                                                    Duration(
-                                                        milliseconds: 2000),
-                                                    () async {
-                                                      setState(() => FFAppState()
-                                                              .pickSearchString =
-                                                          textController!.text);
-                                                    },
-                                                  ),
-                                                  obscureText: false,
-                                                  decoration: InputDecoration(
-                                                    hintText: 'Search',
-                                                    hintStyle: FlutterFlowTheme
-                                                            .of(context)
-                                                        .bodyText2
-                                                        .override(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 18,
-                                                        ),
-                                                    enabledBorder:
-                                                        UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color:
-                                                            Color(0x00000000),
-                                                        width: 1,
-                                                      ),
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .only(
-                                                        topLeft:
-                                                            Radius.circular(
-                                                                4.0),
-                                                        topRight:
-                                                            Radius.circular(
-                                                                4.0),
-                                                      ),
-                                                    ),
-                                                    focusedBorder:
-                                                        UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color:
-                                                            Color(0x00000000),
-                                                        width: 1,
-                                                      ),
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .only(
-                                                        topLeft:
-                                                            Radius.circular(
-                                                                4.0),
-                                                        topRight:
-                                                            Radius.circular(
-                                                                4.0),
-                                                      ),
-                                                    ),
-                                                    errorBorder:
-                                                        UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color:
-                                                            Color(0x00000000),
-                                                        width: 1,
-                                                      ),
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .only(
-                                                        topLeft:
-                                                            Radius.circular(
-                                                                4.0),
-                                                        topRight:
-                                                            Radius.circular(
-                                                                4.0),
-                                                      ),
-                                                    ),
-                                                    focusedErrorBorder:
-                                                        UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color:
-                                                            Color(0x00000000),
-                                                        width: 1,
-                                                      ),
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .only(
-                                                        topLeft:
-                                                            Radius.circular(
-                                                                4.0),
-                                                        topRight:
-                                                            Radius.circular(
-                                                                4.0),
-                                                      ),
-                                                    ),
-                                                    prefixIcon: Icon(
-                                                      Icons.search,
-                                                      size: 22,
-                                                    ),
-                                                    suffixIcon: textController!
-                                                            .text.isNotEmpty
-                                                        ? InkWell(
-                                                            onTap: () async {
-                                                              textController
-                                                                  ?.clear();
-                                                              setState(() => FFAppState()
-                                                                      .pickSearchString =
-                                                                  textController!
-                                                                      .text);
-                                                              setState(() {});
-                                                            },
-                                                            child: Icon(
-                                                              Icons.clear,
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .secondaryText,
-                                                              size: 22,
-                                                            ),
-                                                          )
-                                                        : null,
-                                                  ),
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyText1
-                                                      .override(
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 14,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-                              child: Builder(
-                                builder: (context) {
-                                  final pickChildList = functions
-                                      .getPickListWithSearchIndex(
-                                          FFAppState().pickList.toList(),
-                                          textController!.text)
-                                      .toList();
-                                  return ListView.builder(
-                                    padding: EdgeInsets.zero,
-                                    primary: false,
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: pickChildList.length,
-                                    itemBuilder: (context, pickChildListIndex) {
-                                      final pickChildListItem =
-                                          pickChildList[pickChildListIndex];
-                                      return Align(
-                                        alignment: AlignmentDirectional(0, 0),
-                                        child: PickComponentWidget(
-                                          key: Key(
-                                              'PickComponent_${pickChildListIndex}'),
-                                          product: pickChildListItem,
-                                          pickSting: 'To Pick',
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 70, 0, 0),
+                        child: Builder(
+                          builder: (context) {
+                            final pickChildList = functions
+                                .getPickListWithSearchIndex(
+                                    FFAppState().pickList.toList(),
+                                    textController!.text)
+                                .toList();
+                            return ListView.builder(
+                              padding: EdgeInsets.zero,
+                              primary: false,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: pickChildList.length,
+                              itemBuilder: (context, pickChildListIndex) {
+                                final pickChildListItem =
+                                    pickChildList[pickChildListIndex];
+                                return Align(
+                                  alignment: AlignmentDirectional(0, 0),
+                                  child: PickComponentWidget(
+                                    key: Key(
+                                        'PickComponent_${pickChildListIndex}'),
+                                    product: pickChildListItem,
+                                    pickSting: 'To Pick',
+                                  ),
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
                       if (FFAppState().showBeginPacking)
@@ -324,17 +151,15 @@ class _PickListPageWidgetState extends State<PickListPageWidget> {
                                   EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  context.pushNamed(
-                                    'OrderPackPage',
-                                    extra: <String, dynamic>{
-                                      kTransitionInfoKey: TransitionInfo(
-                                        hasTransition: true,
-                                        transitionType:
-                                            PageTransitionType.scale,
-                                        alignment: Alignment.bottomCenter,
-                                        duration: Duration(milliseconds: 1000),
-                                      ),
-                                    },
+                                  await Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      type: PageTransitionType.fade,
+                                      duration: Duration(milliseconds: 500),
+                                      reverseDuration:
+                                          Duration(milliseconds: 500),
+                                      child: OrderPackPageWidget(),
+                                    ),
                                   );
                                 },
                                 text: 'Touch to begin Packing',
@@ -359,6 +184,155 @@ class _PickListPageWidgetState extends State<PickListPageWidget> {
                             ),
                           ],
                         ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(15, 10, 15, 10),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryColor,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  5, 5, 5, 5),
+                                          child: TextFormField(
+                                            controller: textController,
+                                            onChanged: (_) =>
+                                                EasyDebounce.debounce(
+                                              'textController',
+                                              Duration(milliseconds: 50),
+                                              () async {
+                                                setState(() {
+                                                  FFAppState()
+                                                          .pickSearchString =
+                                                      textController!.text;
+                                                });
+                                              },
+                                            ),
+                                            obscureText: false,
+                                            decoration: InputDecoration(
+                                              hintText: 'Search',
+                                              hintStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText2
+                                                      .override(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 18,
+                                                      ),
+                                              enabledBorder:
+                                                  UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 1,
+                                                ),
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  topLeft: Radius.circular(4.0),
+                                                  topRight:
+                                                      Radius.circular(4.0),
+                                                ),
+                                              ),
+                                              focusedBorder:
+                                                  UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 1,
+                                                ),
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  topLeft: Radius.circular(4.0),
+                                                  topRight:
+                                                      Radius.circular(4.0),
+                                                ),
+                                              ),
+                                              errorBorder: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 1,
+                                                ),
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  topLeft: Radius.circular(4.0),
+                                                  topRight:
+                                                      Radius.circular(4.0),
+                                                ),
+                                              ),
+                                              focusedErrorBorder:
+                                                  UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 1,
+                                                ),
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  topLeft: Radius.circular(4.0),
+                                                  topRight:
+                                                      Radius.circular(4.0),
+                                                ),
+                                              ),
+                                              prefixIcon: Icon(
+                                                Icons.search,
+                                                size: 22,
+                                              ),
+                                              suffixIcon: textController!
+                                                      .text.isNotEmpty
+                                                  ? InkWell(
+                                                      onTap: () async {
+                                                        textController?.clear();
+                                                        setState(() {
+                                                          FFAppState()
+                                                                  .pickSearchString =
+                                                              textController!
+                                                                  .text;
+                                                        });
+                                                        setState(() {});
+                                                      },
+                                                      child: Icon(
+                                                        Icons.clear,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryText,
+                                                        size: 22,
+                                                      ),
+                                                    )
+                                                  : null,
+                                            ),
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1
+                                                .override(
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 14,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

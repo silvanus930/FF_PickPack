@@ -3,11 +3,15 @@ import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
+import '../login_page/login_page_widget.dart';
+import '../start_page/start_page_widget.dart';
+import '../custom_code/actions/index.dart' as actions;
 import '../flutter_flow/custom_functions.dart' as functions;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class StorePageWidget extends StatefulWidget {
   const StorePageWidget({Key? key}) : super(key: key);
@@ -17,9 +21,9 @@ class StorePageWidget extends StatefulWidget {
 }
 
 class _StorePageWidgetState extends State<StorePageWidget> {
-  ApiCallResponse? apiResultbg4;
   ApiCallResponse? apiResultrkq;
   TextEditingController? storeEditController;
+  String? userData;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -27,11 +31,13 @@ class _StorePageWidgetState extends State<StorePageWidget> {
     super.initState();
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      setState(() => FFAppState().totalPickNumber = 0);
-      setState(() => FFAppState().totalPackNumber = 0);
+      userData = await actions.getUserDataFromLocal(
+        context,
+        'storeName',
+      );
     });
 
-    storeEditController = TextEditingController();
+    storeEditController = TextEditingController(text: FFAppState().storeName);
   }
 
   @override
@@ -42,6 +48,8 @@ class _StorePageWidgetState extends State<StorePageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryColor,
@@ -69,15 +77,14 @@ class _StorePageWidgetState extends State<StorePageWidget> {
                           size: 30,
                         ),
                         onPressed: () async {
-                          context.pushNamed(
-                            'StartPage',
-                            extra: <String, dynamic>{
-                              kTransitionInfoKey: TransitionInfo(
-                                hasTransition: true,
-                                transitionType: PageTransitionType.rightToLeft,
-                                duration: Duration(milliseconds: 500),
-                              ),
-                            },
+                          await Navigator.push(
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.rightToLeft,
+                              duration: Duration(milliseconds: 500),
+                              reverseDuration: Duration(milliseconds: 500),
+                              child: StartPageWidget(),
+                            ),
                           );
                         },
                       ),
@@ -109,10 +116,12 @@ class _StorePageWidgetState extends State<StorePageWidget> {
                         controller: storeEditController,
                         onChanged: (_) => EasyDebounce.debounce(
                           'storeEditController',
-                          Duration(milliseconds: 2000),
+                          Duration(milliseconds: 100),
                           () async {
-                            setState(() => FFAppState().storeName =
-                                storeEditController!.text);
+                            setState(() {
+                              FFAppState().storeName =
+                                  storeEditController!.text;
+                            });
                           },
                         ),
                         autofocus: true,
@@ -175,8 +184,10 @@ class _StorePageWidgetState extends State<StorePageWidget> {
                               ? InkWell(
                                   onTap: () async {
                                     storeEditController?.clear();
-                                    setState(() => FFAppState().storeName =
-                                        storeEditController!.text);
+                                    setState(() {
+                                      FFAppState().storeName =
+                                          storeEditController!.text;
+                                    });
                                     setState(() {});
                                   },
                                   child: Icon(
@@ -203,7 +214,7 @@ class _StorePageWidgetState extends State<StorePageWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          storeEditController!.text,
+                          FFAppState().storeName,
                           style:
                               FlutterFlowTheme.of(context).bodyText1.override(
                                     fontFamily: 'Poppins',
@@ -233,14 +244,31 @@ class _StorePageWidgetState extends State<StorePageWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                 child: FFButtonWidget(
                   onPressed: () async {
-                    if (storeEditController!.text == null ||
-                        storeEditController!.text == '') {
+                    apiResultrkq = await IsValidDomainCall.call(
+                      domain: functions
+                          .getDomainFromStoreName(storeEditController!.text),
+                    );
+                    if (IsValidDomainCall.isValidUrl(
+                      (apiResultrkq?.jsonBody ?? ''),
+                    )) {
+                      await actions.saveDataToLocal(
+                        context,
+                        'storeName',
+                        storeEditController!.text,
+                      );
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginPageWidget(),
+                        ),
+                      );
+                    } else {
                       await showDialog(
                         context: context,
                         builder: (alertDialogContext) {
                           return AlertDialog(
-                            title: Text('Empty Store Name!'),
-                            content: Text('Please Enter Your Store Name!'),
+                            title: Text('Oops!'),
+                            content: Text('Please check domain'),
                             actions: [
                               TextButton(
                                 onPressed: () =>
@@ -251,97 +279,6 @@ class _StorePageWidgetState extends State<StorePageWidget> {
                           );
                         },
                       );
-                    } else {
-                      apiResultrkq = await IsValidDomainCall.call(
-                        domain: functions
-                            .getDomainFromStoreName(storeEditController!.text),
-                      );
-                      if ((apiResultrkq?.succeeded ?? true)) {
-                        if (IsValidDomainCall.isValidUrl(
-                              (apiResultrkq?.jsonBody ?? ''),
-                            ) ==
-                            true) {
-                          apiResultbg4 = await GetOrdersCall.call();
-                          if ((apiResultbg4?.succeeded ?? true)) {
-                            setState(() =>
-                                FFAppState().orderList = GetOrdersCall.orders(
-                                  (apiResultbg4?.jsonBody ?? ''),
-                                ).toList());
-                          } else {
-                            await showDialog(
-                              context: context,
-                              builder: (alertDialogContext) {
-                                return AlertDialog(
-                                  title: Text('Net Error!'),
-                                  content: Text('Can\'t get Orders!'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(alertDialogContext),
-                                      child: Text('Ok'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-
-                          context.pushNamed(
-                            'LoginPage',
-                            extra: <String, dynamic>{
-                              kTransitionInfoKey: TransitionInfo(
-                                hasTransition: true,
-                                transitionType: PageTransitionType.scale,
-                                alignment: Alignment.bottomCenter,
-                                duration: Duration(milliseconds: 500),
-                              ),
-                            },
-                          );
-                        } else {
-                          await showDialog(
-                            context: context,
-                            builder: (alertDialogContext) {
-                              return AlertDialog(
-                                title: Text('Please Enter Valid Store Name!'),
-                                content: Text('Please Enter Valid Store Name!'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(alertDialogContext),
-                                    child: Text('Ok'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-
-                        setState(() => FFAppState().ownerInfo = getJsonField(
-                              (apiResultrkq?.jsonBody ?? ''),
-                              r'''$''',
-                            ));
-                        setState(() => FFAppState().orderList = functions
-                            .initOrderListSelection(
-                                FFAppState().orderList.toList())
-                            .toList());
-                      } else {
-                        await showDialog(
-                          context: context,
-                          builder: (alertDialogContext) {
-                            return AlertDialog(
-                              title: Text('Empty Store Name!'),
-                              content: Text('Request Error!'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(alertDialogContext),
-                                  child: Text('Ok'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
                     }
 
                     setState(() {});

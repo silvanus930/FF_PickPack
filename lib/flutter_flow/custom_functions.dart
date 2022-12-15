@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'lat_lng.dart';
 import 'place.dart';
 import '../backend/backend.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../auth/auth_util.dart';
 
 List<dynamic> sortOrderList(List<dynamic> originList) {
   originList.sort((a, b) => a['created_at'].compareTo(b['created_at']));
@@ -18,36 +18,23 @@ List<dynamic> sortOrderList(List<dynamic> originList) {
 List<dynamic> sortOrderListWidtIndex(
   List<dynamic> originList,
   bool isSort,
-  bool isNote,
   String searchString,
 ) {
   List<dynamic> result = [];
 
-  for (var val in originList) {
-    if (val['customer']['first_name']
-            .toLowerCase()
-            .contains(searchString.toLowerCase()) ||
-        val['customer']['last_name']
-            .toLowerCase()
-            .contains(searchString.toLowerCase())) {
-      result.add(val);
+  if (!searchString.isEmpty)
+    for (var val in originList) {
+      String str = val['name'].toLowerCase();
+      if (str.contains(searchString.toLowerCase())) {
+        result.add(val);
+      }
     }
-  }
+  else
+    result = originList;
 
   if (isSort) {
     result.sort((a, b) => a['created_at'].compareTo(b['created_at']));
   }
-
-  if (isNote) {
-    List<dynamic> result1 = [];
-    for (var val in result) {
-      if (val['note'] == "") {
-        result1.add(val);
-      }
-    }
-    return result1;
-  }
-
   return result;
 }
 
@@ -62,6 +49,9 @@ List<dynamic> getPickListWithSearchIndex(
       result.add(val);
     }
   }
+
+  result.sort((a, b) => a['title'].compareTo(b['title']));
+
   return result;
 }
 
@@ -235,10 +225,20 @@ bool isNoteEmpty(String? note) {
   return true;
 }
 
+bool isTagEmpty(String? tag) {
+  if (tag == 'null' || tag == '') return false;
+  return true;
+}
+
 String getButtonString(
   bool isPick,
   int number,
 ) {
   if (isPick) return 'To Pick (' + number.toString() + ')';
   return 'Packed (' + number.toString() + ')';
+}
+
+List<String>? spiltTagToTags(String? tagString) {
+  if (tagString == '' || tagString == 'null') return [];
+  return tagString!.split(',');
 }

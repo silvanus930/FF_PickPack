@@ -1,9 +1,12 @@
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
+import '../order_pack_page/order_pack_page_widget.dart';
+import '../order_page/order_page_widget.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class FinishPageWidget extends StatefulWidget {
   const FinishPageWidget({
@@ -22,6 +25,8 @@ class _FinishPageWidgetState extends State<FinishPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryColor,
@@ -165,28 +170,30 @@ class _FinishPageWidgetState extends State<FinishPageWidget> {
                                     EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                                 child: FFButtonWidget(
                                   onPressed: () async {
-                                    context.pushNamed(
-                                      'OrderPackPage',
-                                      extra: <String, dynamic>{
-                                        kTransitionInfoKey: TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.scale,
-                                          alignment: Alignment.bottomCenter,
-                                          duration:
-                                              Duration(milliseconds: 1000),
-                                        ),
-                                      },
-                                    );
-
                                     if (functions
-                                            .getSelectedOrderList(
-                                                FFAppState().orderList.toList())
+                                            .getSelectedOrderList(functions
+                                                .getSelectedOrderList(
+                                                    FFAppState()
+                                                        .orderPickList
+                                                        .toList())
+                                                .toList())
                                             .length <=
                                         0) {
-                                      context.pushNamed('OrderPage');
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              OrderPageWidget(),
+                                        ),
+                                      );
                                     } else {
-                                      context.pushNamed('OrderPackPage');
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              OrderPackPageWidget(),
+                                        ),
+                                      );
                                     }
                                   },
                                   text: 'Continue Packing',

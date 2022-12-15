@@ -3,6 +3,7 @@ import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class PickComponentWidget extends StatefulWidget {
   const PickComponentWidget({
@@ -21,6 +22,8 @@ class PickComponentWidget extends StatefulWidget {
 class _PickComponentWidgetState extends State<PickComponentWidget> {
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Align(
       alignment: AlignmentDirectional(0, 0),
       child: Column(
@@ -66,7 +69,7 @@ class _PickComponentWidgetState extends State<PickComponentWidget> {
                                 ),
                                 width: 120,
                                 height: 100,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.contain,
                               ),
                             ),
                           ),
@@ -131,24 +134,30 @@ class _PickComponentWidgetState extends State<PickComponentWidget> {
                           ),
                           InkWell(
                             onTap: () async {
-                              setState(() => FFAppState().pickList = functions
-                                  .decreaseProductNumberById(
-                                      FFAppState().pickList.toList(),
-                                      getJsonField(
-                                        widget.product,
-                                        r'''$.id''',
-                                      ))
-                                  .toList());
-                              setState(() => FFAppState().showBeginPacking =
-                                  functions.getPickedNumberFromPickList(
-                                          FFAppState().pickList.toList()) <=
-                                      0);
+                              setState(() {
+                                FFAppState().pickList = functions
+                                    .decreaseProductNumberById(
+                                        FFAppState().pickList.toList(),
+                                        getJsonField(
+                                          widget.product,
+                                          r'''$.id''',
+                                        ))
+                                    .toList();
+                                FFAppState().showBeginPacking =
+                                    functions.getPickedNumberFromPickList(
+                                            FFAppState().pickList.toList()) <=
+                                        0;
+                              });
                               if (widget.pickSting == 'To Pick') {
-                                setState(() => FFAppState().totalPickNumber =
-                                    FFAppState().totalPickNumber + 1);
+                                setState(() {
+                                  FFAppState().totalPickNumber =
+                                      FFAppState().totalPickNumber + 1;
+                                });
                               } else {
-                                setState(() => FFAppState().totalPackNumber =
-                                    FFAppState().totalPackNumber + 1);
+                                setState(() {
+                                  FFAppState().totalPackNumber =
+                                      FFAppState().totalPackNumber + 1;
+                                });
                               }
                             },
                             child: Column(

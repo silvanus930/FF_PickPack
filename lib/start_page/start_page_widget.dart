@@ -1,8 +1,12 @@
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
+import '../store_page/store_page_widget.dart';
+import '../custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class StartPageWidget extends StatefulWidget {
   const StartPageWidget({Key? key}) : super(key: key);
@@ -12,10 +16,40 @@ class StartPageWidget extends StatefulWidget {
 }
 
 class _StartPageWidgetState extends State<StartPageWidget> {
+  String? storeName;
+  String? userEmail;
+  String? userPassword;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  void initState() {
+    super.initState();
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      storeName = await actions.getUserDataFromLocal(
+        context,
+        'storeName',
+      );
+      userEmail = await actions.getUserDataFromLocal(
+        context,
+        'userEmail',
+      );
+      userPassword = await actions.getUserDataFromLocal(
+        context,
+        'userPassword',
+      );
+      setState(() {
+        FFAppState().storeName = storeName!;
+        FFAppState().userEmail = userEmail!;
+        FFAppState().userPassword = userPassword!;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryColor,
@@ -175,15 +209,14 @@ class _StartPageWidgetState extends State<StartPageWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                 child: FFButtonWidget(
                   onPressed: () async {
-                    context.pushNamed(
-                      'StorePage',
-                      extra: <String, dynamic>{
-                        kTransitionInfoKey: TransitionInfo(
-                          hasTransition: true,
-                          transitionType: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 500),
-                        ),
-                      },
+                    await Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        duration: Duration(milliseconds: 500),
+                        reverseDuration: Duration(milliseconds: 500),
+                        child: StorePageWidget(),
+                      ),
                     );
                   },
                   text: 'Get Started',

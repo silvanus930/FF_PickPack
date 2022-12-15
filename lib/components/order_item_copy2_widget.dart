@@ -8,8 +8,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class OrderItemWidget extends StatefulWidget {
-  const OrderItemWidget({
+class OrderItemCopy2Widget extends StatefulWidget {
+  const OrderItemCopy2Widget({
     Key? key,
     this.id,
     this.createdDate,
@@ -33,10 +33,10 @@ class OrderItemWidget extends StatefulWidget {
   final List<String>? tag;
 
   @override
-  _OrderItemWidgetState createState() => _OrderItemWidgetState();
+  _OrderItemCopy2WidgetState createState() => _OrderItemCopy2WidgetState();
 }
 
-class _OrderItemWidgetState extends State<OrderItemWidget> {
+class _OrderItemCopy2WidgetState extends State<OrderItemCopy2Widget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();

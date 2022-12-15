@@ -1,10 +1,12 @@
 import '../components/order_pack_item_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
+import '../order_page/order_page_widget.dart';
+import '../profile_page/profile_page_widget.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class OrderPackPageWidget extends StatefulWidget {
   const OrderPackPageWidget({Key? key}) : super(key: key);
@@ -18,6 +20,8 @@ class _OrderPackPageWidgetState extends State<OrderPackPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryColor,
@@ -45,7 +49,12 @@ class _OrderPackPageWidgetState extends State<OrderPackPageWidget> {
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                               child: InkWell(
                                 onTap: () async {
-                                  context.pushNamed('OrderPage');
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => OrderPageWidget(),
+                                    ),
+                                  );
                                 },
                                 child: Text(
                                   'Home',
@@ -82,7 +91,12 @@ class _OrderPackPageWidgetState extends State<OrderPackPageWidget> {
                                 EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
                             child: InkWell(
                               onTap: () async {
-                                context.pushNamed('ProfilePage');
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfilePageWidget(),
+                                  ),
+                                );
                               },
                               child: Text(
                                 'Profile',
@@ -125,7 +139,7 @@ class _OrderPackPageWidgetState extends State<OrderPackPageWidget> {
                                 builder: (context) {
                                   final selectedOrder = functions
                                       .getSelectedOrderList(
-                                          FFAppState().orderList.toList())
+                                          FFAppState().orderPickList.toList())
                                       .toList();
                                   return ListView.builder(
                                     padding: EdgeInsets.zero,
@@ -151,50 +165,6 @@ class _OrderPackPageWidgetState extends State<OrderPackPageWidget> {
                             ),
                           ],
                         ),
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                context.pushNamed(
-                                  'PickListPage',
-                                  extra: <String, dynamic>{
-                                    kTransitionInfoKey: TransitionInfo(
-                                      hasTransition: true,
-                                      transitionType:
-                                          PageTransitionType.bottomToTop,
-                                      duration: Duration(milliseconds: 1000),
-                                    ),
-                                  },
-                                );
-                              },
-                              text: 'Create Pick List',
-                              options: FFButtonOptions(
-                                width: 130,
-                                height: 50,
-                                color:
-                                    FlutterFlowTheme.of(context).primaryColor,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .subtitle2
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: Colors.white,
-                                    ),
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.circular(0),
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),

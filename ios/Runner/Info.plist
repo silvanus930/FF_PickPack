@@ -33,19 +33,7 @@
             </array>
         </dict>
 
-        <dict>
-        <key>CFBundleTypeRole</key>
-        <string>Editor</string>
-        <key>CFBundleURLName</key>
-        <string>pickpackforios.com</string>
-        <key>CFBundleURLSchemes</key>
-        <array>
-        <string>pickpackforios</string>
-        </array>
-        </dict>
     </array>
-    <key>FlutterDeepLinkingEnabled</key>
-    <true/>
 
 
 	<key>CFBundleVersion</key>

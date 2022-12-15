@@ -1,5 +1,6 @@
 import '../backend/api_requests/api_calls.dart';
 import '../components/pick_component_widget.dart';
+import '../finish_page/finish_page_widget.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -9,6 +10,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class PackListPageWidget extends StatefulWidget {
   const PackListPageWidget({
@@ -32,7 +34,9 @@ class _PackListPageWidgetState extends State<PackListPageWidget> {
     super.initState();
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      setState(() => FFAppState().showBeginPacking = false);
+      setState(() {
+        FFAppState().showBeginPacking = false;
+      });
     });
 
     textController = TextEditingController();
@@ -46,6 +50,8 @@ class _PackListPageWidgetState extends State<PackListPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryColor,
@@ -78,7 +84,7 @@ class _PackListPageWidgetState extends State<PackListPageWidget> {
                               size: 30,
                             ),
                             onPressed: () async {
-                              context.pop();
+                              Navigator.pop(context);
                             },
                           ),
                         ],
@@ -109,9 +115,44 @@ class _PackListPageWidgetState extends State<PackListPageWidget> {
                   ),
                   child: Stack(
                     children: [
-                      SingleChildScrollView(
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 125, 0, 0),
+                        child: Builder(
+                          builder: (context) {
+                            final pickChildList = functions
+                                .getPickListWithSearchIndex(
+                                    FFAppState().pickList.toList(),
+                                    textController!.text)
+                                .toList();
+                            return ListView.builder(
+                              padding: EdgeInsets.zero,
+                              primary: false,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: pickChildList.length,
+                              itemBuilder: (context, pickChildListIndex) {
+                                final pickChildListItem =
+                                    pickChildList[pickChildListIndex];
+                                return Align(
+                                  alignment: AlignmentDirectional(0, 0),
+                                  child: PickComponentWidget(
+                                    key: Key(
+                                        'PickComponent_${pickChildListIndex}'),
+                                    product: pickChildListItem,
+                                    pickSting: 'To Pack',
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                         child: Column(
-                          mainAxisSize: MainAxisSize.max,
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Container(
                               width: MediaQuery.of(context).size.width * 0.9,
@@ -214,12 +255,14 @@ class _PackListPageWidgetState extends State<PackListPageWidget> {
                                                   onChanged: (_) =>
                                                       EasyDebounce.debounce(
                                                     'textController',
-                                                    Duration(
-                                                        milliseconds: 2000),
+                                                    Duration(milliseconds: 50),
                                                     () async {
-                                                      setState(() => FFAppState()
-                                                              .pickSearchString =
-                                                          textController!.text);
+                                                      setState(() {
+                                                        FFAppState()
+                                                                .pickSearchString =
+                                                            textController!
+                                                                .text;
+                                                      });
                                                     },
                                                   ),
                                                   obscureText: false,
@@ -314,10 +357,12 @@ class _PackListPageWidgetState extends State<PackListPageWidget> {
                                                             onTap: () async {
                                                               textController
                                                                   ?.clear();
-                                                              setState(() => FFAppState()
-                                                                      .pickSearchString =
-                                                                  textController!
-                                                                      .text);
+                                                              setState(() {
+                                                                FFAppState()
+                                                                        .pickSearchString =
+                                                                    textController!
+                                                                        .text;
+                                                              });
                                                               setState(() {});
                                                             },
                                                             child: Icon(
@@ -348,39 +393,6 @@ class _PackListPageWidgetState extends State<PackListPageWidget> {
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-                              child: Builder(
-                                builder: (context) {
-                                  final pickChildList = functions
-                                      .getPickListWithSearchIndex(
-                                          FFAppState().pickList.toList(),
-                                          textController!.text)
-                                      .toList();
-                                  return ListView.builder(
-                                    padding: EdgeInsets.zero,
-                                    primary: false,
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: pickChildList.length,
-                                    itemBuilder: (context, pickChildListIndex) {
-                                      final pickChildListItem =
-                                          pickChildList[pickChildListIndex];
-                                      return Align(
-                                        alignment: AlignmentDirectional(0, 0),
-                                        child: PickComponentWidget(
-                                          key: Key(
-                                              'PickComponent_${pickChildListIndex}'),
-                                          product: pickChildListItem,
-                                          pickSting: 'To Pack',
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -395,53 +407,39 @@ class _PackListPageWidgetState extends State<PackListPageWidget> {
                                   EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  apiResultuir = await UpdateOrderNoteCall.call(
+                                  apiResultuir = await UpDateOrderTagCall.call(
                                     id: getJsonField(
                                       widget.order,
                                       r'''$.id''',
                                     ),
-                                    note: 'This is a test note by dev.',
+                                    fullname: FFAppState().fullName,
                                   );
                                   if ((apiResultuir?.succeeded ?? true)) {
-                                    context.pushNamed(
-                                      'FinishPage',
-                                      queryParams: {
-                                        'order': serializeParam(
-                                          widget.order,
-                                          ParamType.JSON,
+                                    setState(() {
+                                      FFAppState().orderPickList = functions
+                                          .setOrderFlagWithID(
+                                              FFAppState()
+                                                  .orderPickList
+                                                  .toList(),
+                                              getJsonField(
+                                                widget.order,
+                                                r'''$.name''',
+                                              ).toString())
+                                          .toList();
+                                    });
+                                    await Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        type: PageTransitionType.scale,
+                                        alignment: Alignment.bottomCenter,
+                                        duration: Duration(milliseconds: 1000),
+                                        reverseDuration:
+                                            Duration(milliseconds: 1000),
+                                        child: FinishPageWidget(
+                                          order: widget.order,
                                         ),
-                                      }.withoutNulls,
-                                      extra: <String, dynamic>{
-                                        kTransitionInfoKey: TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.scale,
-                                          alignment: Alignment.bottomCenter,
-                                          duration:
-                                              Duration(milliseconds: 1000),
-                                        ),
-                                      },
+                                      ),
                                     );
-
-                                    setState(
-                                        () => FFAppState().orderList = functions
-                                            .setOrderFlagWithID(
-                                                FFAppState().orderList.toList(),
-                                                getJsonField(
-                                                  widget.order,
-                                                  r'''$.name''',
-                                                ).toString())
-                                            .toList());
-                                    setState(
-                                        () => FFAppState().orderList = functions
-                                            .updateSelectedOrderNote(
-                                                FFAppState().orderList.toList(),
-                                                getJsonField(
-                                                  widget.order,
-                                                  r'''$.id''',
-                                                ),
-                                                'This is a test note by dev')
-                                            .toList());
                                   }
 
                                   setState(() {});

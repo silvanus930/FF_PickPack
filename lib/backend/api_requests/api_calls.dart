@@ -12,8 +12,7 @@ class GetOrdersCall {
   static Future<ApiCallResponse> call() {
     return ApiManager.instance.makeApiCall(
       callName: 'getOrders',
-      apiUrl:
-          'https://pickpackbackend.donaldharringto.repl.co/api/v1/shopify/get_orders',
+      apiUrl: '97.74.81.233:8001/api/v1/shopify/get_orders',
       callType: ApiCallType.GET,
       headers: {},
       params: {},
@@ -30,29 +29,23 @@ class GetOrdersCall {
         response,
         r'''$.count''',
       );
-  static dynamic message(dynamic response) => getJsonField(
+  static dynamic pickOrders(dynamic response) => getJsonField(
         response,
-        r'''$.msg''',
-      );
-  static dynamic ordersIDList(dynamic response) => getJsonField(
-        response,
-        r'''$.orders[:].id''',
+        r'''$.pick_orders''',
         true,
       );
-  static dynamic ordersCreatedList(dynamic response) => getJsonField(
+  static dynamic packOrders(dynamic response) => getJsonField(
         response,
-        r'''$.orders[:].created_at''',
+        r'''$.pack_orders''',
         true,
       );
-  static dynamic ordersFulList(dynamic response) => getJsonField(
+  static dynamic pickCount(dynamic response) => getJsonField(
         response,
-        r'''$.orders[:].fulfillment_status''',
-        true,
+        r'''$.pick_count''',
       );
-  static dynamic orders(dynamic response) => getJsonField(
+  static dynamic packCount(dynamic response) => getJsonField(
         response,
-        r'''$.orders''',
-        true,
+        r'''$.pack_count''',
       );
 }
 
@@ -62,8 +55,7 @@ class IsValidDomainCall {
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'isValidDomain',
-      apiUrl:
-          'https://pickpackbackend.donaldharringto.repl.co/api/v1/auth/is_valid_domain',
+      apiUrl: '97.74.81.233:8001/api/v1/auth/is_valid_domain',
       callType: ApiCallType.GET,
       headers: {},
       params: {
@@ -90,8 +82,7 @@ class GetProductsByIdsCall {
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'getProductsByIds',
-      apiUrl:
-          'https://pickpackbackend.donaldharringto.repl.co/api/v1/shopify/get_products_via_ids',
+      apiUrl: '97.74.81.233:8001/api/v1/shopify/get_products_via_ids',
       callType: ApiCallType.GET,
       headers: {},
       params: {
@@ -115,8 +106,7 @@ class IsCustomerCall {
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'isCustomer',
-      apiUrl:
-          'https://pickpackbackend.donaldharringto.repl.co/api/v1/shopify/is_customer',
+      apiUrl: '97.74.81.233:8001/api/v1/shopify/is_customer',
       callType: ApiCallType.GET,
       headers: {},
       params: {
@@ -144,13 +134,88 @@ class UpdateOrderNoteCall {
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'updateOrderNote',
-      apiUrl:
-          'https://pickpackbackend.donaldharringto.repl.co/api/v1/shopify/update_order_note',
+      apiUrl: '97.74.81.233:8001/api/v1/shopify/update_order_note',
       callType: ApiCallType.GET,
       headers: {},
       params: {
         'id': id,
         'note': note,
+      },
+      returnBody: true,
+      cache: false,
+    );
+  }
+}
+
+class IsLoginCall {
+  static Future<ApiCallResponse> call({
+    String? email = '',
+    String? password = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'isLogin',
+      apiUrl: '97.74.81.233:8001/api/v1/auth/signin',
+      callType: ApiCallType.GET,
+      headers: {},
+      params: {
+        'email': email,
+        'password': password,
+      },
+      returnBody: true,
+      cache: false,
+    );
+  }
+
+  static dynamic status(dynamic response) => getJsonField(
+        response,
+        r'''$.status''',
+      );
+}
+
+class AddUserCall {
+  static Future<ApiCallResponse> call({
+    String? email = '',
+    String? password = '',
+    String? fullName = '',
+  }) {
+    final body = '''
+{
+  "full_name": "${fullName}",
+  "email": "${email}",
+  "password": "${password}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'addUser',
+      apiUrl: '97.74.81.233:8001/api/v1/auth/add_user',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      cache: false,
+    );
+  }
+
+  static dynamic status(dynamic response) => getJsonField(
+        response,
+        r'''$.state''',
+      );
+}
+
+class UpDateOrderTagCall {
+  static Future<ApiCallResponse> call({
+    int? id,
+    String? fullname = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'upDateOrderTag',
+      apiUrl: '97.74.81.233:8001/api/v1/shopify/update_order_tags',
+      callType: ApiCallType.GET,
+      headers: {},
+      params: {
+        'id': id,
+        'fullname': fullname,
       },
       returnBody: true,
       cache: false,
@@ -180,5 +245,14 @@ String _serializeList(List? list) {
     return json.encode(list);
   } catch (_) {
     return '[]';
+  }
+}
+
+String _serializeJson(dynamic jsonVar) {
+  jsonVar ??= {};
+  try {
+    return json.encode(jsonVar);
+  } catch (_) {
+    return '{}';
   }
 }

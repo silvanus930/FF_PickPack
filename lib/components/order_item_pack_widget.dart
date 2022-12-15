@@ -1,4 +1,3 @@
-import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
@@ -8,8 +7,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class OrderItemWidget extends StatefulWidget {
-  const OrderItemWidget({
+class OrderItemPackWidget extends StatefulWidget {
+  const OrderItemPackWidget({
     Key? key,
     this.id,
     this.createdDate,
@@ -33,10 +32,10 @@ class OrderItemWidget extends StatefulWidget {
   final List<String>? tag;
 
   @override
-  _OrderItemWidgetState createState() => _OrderItemWidgetState();
+  _OrderItemPackWidgetState createState() => _OrderItemPackWidgetState();
 }
 
-class _OrderItemWidgetState extends State<OrderItemWidget> {
+class _OrderItemPackWidgetState extends State<OrderItemPackWidget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
@@ -67,34 +66,11 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
+            padding: EdgeInsetsDirectional.fromSTEB(20, 8, 8, 8),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                FlutterFlowIconButton(
-                  borderColor: Colors.transparent,
-                  borderRadius: 30,
-                  borderWidth: 1,
-                  buttonSize: 60,
-                  icon: Icon(
-                    Icons.check_circle,
-                    color: functions.getOrderFlagWithID(
-                            FFAppState().orderPickList.toList(), widget.id)
-                        ? Color(0xFF37CB37)
-                        : FlutterFlowTheme.of(context).secondaryBackground,
-                    size: 40,
-                  ),
-                  onPressed: () async {
-                    setState(() {
-                      FFAppState().orderPickList = functions
-                          .setOrderFlagWithID(
-                              FFAppState().orderPickList.toList(), widget.id)
-                          .toList();
-                      FFAppState().isShowNote = widget.isClicked!;
-                    });
-                  },
-                ),
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
@@ -102,7 +78,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -144,7 +120,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                         ],
                       ),
                       Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -172,40 +148,44 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                         ],
                       ),
                       if (functions.isNoteEmpty(widget.note))
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            FaIcon(
-                              FontAwesomeIcons.stickyNote,
-                              color: Color(0xFF4CB955),
-                              size: 18,
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
-                              child: Text(
-                                widget.note!.maybeHandleOverflow(maxChars: 20),
-                                style: FlutterFlowTheme.of(context)
-                                    .subtitle1
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: Color(0xFF4CB955),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300,
-                                      fontStyle: FontStyle.italic,
-                                    ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.stickyNote,
+                                color: Color(0xFF4CB955),
+                                size: 18,
                               ),
-                            ),
-                          ],
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                                child: AutoSizeText(
+                                  widget.note!,
+                                  maxLines: 1,
+                                  style: FlutterFlowTheme.of(context)
+                                      .subtitle1
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: Color(0xFF4CB955),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w300,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 3, 0, 0),
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            mainAxisSize: MainAxisSize.min,
+                            mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Container(

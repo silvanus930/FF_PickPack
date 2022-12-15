@@ -3,43 +3,46 @@ import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
-import '../forgot_password/forgot_password_widget.dart';
-import '../order_page/order_page_widget.dart';
-import '../set_password/set_password_widget.dart';
-import '../store_page/store_page_widget.dart';
-import '../custom_code/actions/index.dart' as actions;
+import '../login_page/login_page_widget.dart';
+import '../flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class LoginPageWidget extends StatefulWidget {
-  const LoginPageWidget({Key? key}) : super(key: key);
+class SetPasswordWidget extends StatefulWidget {
+  const SetPasswordWidget({Key? key}) : super(key: key);
 
   @override
-  _LoginPageWidgetState createState() => _LoginPageWidgetState();
+  _SetPasswordWidgetState createState() => _SetPasswordWidgetState();
 }
 
-class _LoginPageWidgetState extends State<LoginPageWidget> {
-  ApiCallResponse? apiResultLogln;
-  ApiCallResponse? apiResultljd;
+class _SetPasswordWidgetState extends State<SetPasswordWidget> {
+  ApiCallResponse? apiResultAddUser;
+  ApiCallResponse? apiResultack;
   TextEditingController? emailController;
   TextEditingController? passwordController;
 
   late bool passwordVisibility;
+  TextEditingController? passwordConfirmController;
+
+  late bool passwordConfirmVisibility;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController(text: FFAppState().userEmail);
-    passwordController = TextEditingController(text: FFAppState().userPassword);
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
     passwordVisibility = false;
+    passwordConfirmController = TextEditingController();
+    passwordConfirmVisibility = false;
   }
 
   @override
   void dispose() {
     emailController?.dispose();
     passwordController?.dispose();
+    passwordConfirmController?.dispose();
     super.dispose();
   }
 
@@ -79,7 +82,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                             type: PageTransitionType.rightToLeft,
                             duration: Duration(milliseconds: 500),
                             reverseDuration: Duration(milliseconds: 500),
-                            child: StorePageWidget(),
+                            child: LoginPageWidget(),
                           ),
                         );
                       },
@@ -87,7 +90,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                     Align(
                       alignment: AlignmentDirectional(0, 0),
                       child: Text(
-                        'Login',
+                        'Set Password',
                         textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context).title2.override(
                               fontFamily: 'Poppins',
@@ -144,7 +147,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
                         child: Text(
-                          'Log in',
+                          'Set Pasword',
                           style:
                               FlutterFlowTheme.of(context).bodyText1.override(
                                     fontFamily: 'Poppins',
@@ -266,6 +269,62 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   keyboardType: TextInputType.visiblePassword,
                                 ),
                               ),
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                                child: TextFormField(
+                                  controller: passwordConfirmController,
+                                  autofocus: true,
+                                  obscureText: !passwordConfirmVisibility,
+                                  decoration: InputDecoration(
+                                    labelText: 'Confirm Password',
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0xFF3B8FBD),
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0xFF3B8FBD),
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    suffixIcon: InkWell(
+                                      onTap: () => setState(
+                                        () => passwordConfirmVisibility =
+                                            !passwordConfirmVisibility,
+                                      ),
+                                      focusNode: FocusNode(skipTraversal: true),
+                                      child: Icon(
+                                        passwordConfirmVisibility
+                                            ? Icons.visibility_outlined
+                                            : Icons.visibility_off_outlined,
+                                        color: Color(0xFF757575),
+                                        size: 22,
+                                      ),
+                                    ),
+                                  ),
+                                  style: FlutterFlowTheme.of(context).bodyText1,
+                                  keyboardType: TextInputType.visiblePassword,
+                                ),
+                              ),
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment:
@@ -280,37 +339,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                ForgotPasswordWidget(),
+                                                LoginPageWidget(),
                                           ),
                                         );
                                       },
                                       child: Text(
-                                        'Forgot password?',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText1
-                                            .override(
-                                              fontFamily: 'Poppins',
-                                              color: Color(0xFF07895C),
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 10, 0, 0),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                SetPasswordWidget(),
-                                          ),
-                                        );
-                                      },
-                                      child: Text(
-                                        'Set Password',
+                                        'Already Have',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText1
                                             .override(
@@ -328,129 +362,72 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                                 child: FFButtonWidget(
                                   onPressed: () async {
-                                    apiResultLogln = await IsLoginCall.call(
-                                      email: emailController!.text,
-                                      password: passwordController!.text,
-                                    );
-                                    if (IsLoginCall.status(
-                                          (apiResultLogln?.jsonBody ?? ''),
-                                        ) ==
-                                        3) {
-                                      await actions.saveDataToLocal(
-                                        context,
-                                        'userEmail',
-                                        emailController!.text,
+                                    if (emailController!.text != null &&
+                                        emailController!.text != '') {
+                                      apiResultack = await IsCustomerCall.call(
+                                        email: emailController!.text,
                                       );
-                                      await actions.saveDataToLocal(
-                                        context,
-                                        'userPassword',
-                                        passwordController!.text,
-                                      );
-                                      setState(() {
-                                        FFAppState().fullName = getJsonField(
-                                          (apiResultLogln?.jsonBody ?? ''),
-                                          r'''$.full_name''',
-                                        ).toString();
-                                      });
-                                      apiResultljd = await GetOrdersCall.call();
-                                      if ((apiResultljd?.succeeded ?? true)) {
-                                        setState(() {
-                                          FFAppState().orderPackList =
-                                              GetOrdersCall.packOrders(
-                                            (apiResultljd?.jsonBody ?? ''),
-                                          ).toList();
-                                          FFAppState().totalPickNumber =
-                                              GetOrdersCall.pickCount(
-                                            (apiResultljd?.jsonBody ?? ''),
-                                          );
-                                          FFAppState().totalPackNumber =
-                                              GetOrdersCall.packCount(
-                                            (apiResultljd?.jsonBody ?? ''),
-                                          );
-                                          FFAppState().orderPickList =
-                                              GetOrdersCall.pickOrders(
-                                            (apiResultljd?.jsonBody ?? ''),
-                                          ).toList();
-                                        });
-                                      } else {
-                                        await showDialog(
-                                          context: context,
-                                          builder: (alertDialogContext) {
-                                            return AlertDialog(
-                                              title: Text('OderList'),
-                                              content: Text(
-                                                  'There is no any orderList'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(
-                                                          alertDialogContext),
-                                                  child: Text('Ok'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      }
-
-                                      await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              OrderPageWidget(),
-                                        ),
-                                      );
-                                    } else {
-                                      if (IsLoginCall.status(
-                                            (apiResultLogln?.jsonBody ?? ''),
+                                      if (IsCustomerCall.status(
+                                            (apiResultack?.jsonBody ?? ''),
                                           ) ==
-                                          2) {
-                                        await showDialog(
-                                          context: context,
-                                          builder: (alertDialogContext) {
-                                            return AlertDialog(
-                                              title: Text('LogIn Faild'),
-                                              content: Text('Invalid password'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(
-                                                          alertDialogContext),
-                                                  child: Text('Ok'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      } else {
-                                        if (IsLoginCall.status(
-                                              (apiResultLogln?.jsonBody ?? ''),
-                                            ) ==
-                                            1) {
-                                          await showDialog(
-                                            context: context,
-                                            builder: (alertDialogContext) {
-                                              return AlertDialog(
-                                                title: Text('LogIn Faild'),
-                                                content: Text('Something else'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                            alertDialogContext),
-                                                    child: Text('Ok'),
-                                                  ),
-                                                ],
-                                              );
-                                            },
+                                          1) {
+                                        if (passwordController!.text ==
+                                            passwordConfirmController!.text) {
+                                          apiResultAddUser =
+                                              await AddUserCall.call(
+                                            email: emailController!.text,
+                                            password: passwordController!.text,
+                                            fullName: functions.getFullName(
+                                                getJsonField(
+                                                  (apiResultack?.jsonBody ??
+                                                      ''),
+                                                  r'''$.customer.first_name''',
+                                                ).toString(),
+                                                getJsonField(
+                                                  (apiResultack?.jsonBody ??
+                                                      ''),
+                                                  r'''$.customer.last_name''',
+                                                ).toString()),
                                           );
+                                          if (AddUserCall.status(
+                                                (apiResultAddUser?.jsonBody ??
+                                                    ''),
+                                              ) ==
+                                              1) {
+                                            await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoginPageWidget(),
+                                              ),
+                                            );
+                                          } else {
+                                            await showDialog(
+                                              context: context,
+                                              builder: (alertDialogContext) {
+                                                return AlertDialog(
+                                                  content: Text(
+                                                      'Please check password again'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              alertDialogContext),
+                                                      child: Text('Ok'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
                                         } else {
                                           await showDialog(
                                             context: context,
                                             builder: (alertDialogContext) {
                                               return AlertDialog(
-                                                title: Text('LogIn Faild'),
-                                                content: Text('Invalid Email'),
+                                                title: Text('Password error'),
+                                                content: Text(
+                                                    'Please check confirm password'),
                                                 actions: [
                                                   TextButton(
                                                     onPressed: () =>
@@ -463,12 +440,31 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                             },
                                           );
                                         }
+                                      } else {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (alertDialogContext) {
+                                            return AlertDialog(
+                                              title: Text('Email Error'),
+                                              content: Text(
+                                                  'Please Input Valid Shopify Email'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          alertDialogContext),
+                                                  child: Text('Ok'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
                                       }
                                     }
 
                                     setState(() {});
                                   },
-                                  text: 'Log in',
+                                  text: 'Set Password',
                                   options: FFButtonOptions(
                                     width: double.infinity,
                                     height: 50,
@@ -522,30 +518,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       ),
                                     ),
                                   ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-                                child: InkWell(
-                                  onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => StorePageWidget(),
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    'Log in to other store',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyText1
-                                        .override(
-                                          fontFamily: 'Poppins',
-                                          color: Color(0xFF07895C),
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                  ),
                                 ),
                               ),
                               Padding(

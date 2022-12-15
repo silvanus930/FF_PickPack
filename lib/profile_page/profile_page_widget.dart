@@ -1,8 +1,11 @@
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
+import '../login_page/login_page_widget.dart';
+import '../order_page/order_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePageWidget extends StatefulWidget {
   const ProfilePageWidget({Key? key}) : super(key: key);
@@ -16,6 +19,8 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryColor,
@@ -51,23 +56,21 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                           10, 0, 0, 0),
                                       child: InkWell(
                                         onTap: () async {
-                                          context.pushNamed(
-                                            'OrderPage',
-                                            extra: <String, dynamic>{
-                                              kTransitionInfoKey:
-                                                  TransitionInfo(
-                                                hasTransition: true,
-                                                transitionType:
-                                                    PageTransitionType
-                                                        .topToBottom,
-                                                duration:
-                                                    Duration(milliseconds: 200),
-                                              ),
-                                            },
+                                          await Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              type: PageTransitionType
+                                                  .topToBottom,
+                                              duration:
+                                                  Duration(milliseconds: 200),
+                                              reverseDuration:
+                                                  Duration(milliseconds: 200),
+                                              child: OrderPageWidget(),
+                                            ),
                                           );
                                         },
                                         child: Text(
-                                          'Done',
+                                          'Order',
                                           textAlign: TextAlign.center,
                                           style: FlutterFlowTheme.of(context)
                                               .title2
@@ -105,18 +108,16 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                           0, 0, 10, 0),
                                       child: InkWell(
                                         onTap: () async {
-                                          context.pushNamed(
-                                            'StartPage',
-                                            extra: <String, dynamic>{
-                                              kTransitionInfoKey:
-                                                  TransitionInfo(
-                                                hasTransition: true,
-                                                transitionType:
-                                                    PageTransitionType.fade,
-                                                duration:
-                                                    Duration(milliseconds: 500),
-                                              ),
-                                            },
+                                          await Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              type: PageTransitionType.fade,
+                                              duration:
+                                                  Duration(milliseconds: 500),
+                                              reverseDuration:
+                                                  Duration(milliseconds: 500),
+                                              child: LoginPageWidget(),
+                                            ),
                                           );
                                         },
                                         child: Text(
@@ -250,21 +251,19 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                     EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                                 child: FFButtonWidget(
                                   onPressed: () async {
-                                    context.pushNamed(
-                                      'OrderPage',
-                                      extra: <String, dynamic>{
-                                        kTransitionInfoKey: TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.scale,
-                                          alignment: Alignment.bottomCenter,
-                                          duration:
-                                              Duration(milliseconds: 1000),
-                                        ),
-                                      },
+                                    await Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        type: PageTransitionType.scale,
+                                        alignment: Alignment.bottomCenter,
+                                        duration: Duration(milliseconds: 1000),
+                                        reverseDuration:
+                                            Duration(milliseconds: 1000),
+                                        child: OrderPageWidget(),
+                                      ),
                                     );
                                   },
-                                  text: 'Learn more',
+                                  text: 'Go Home',
                                   options: FFButtonOptions(
                                     width: 200,
                                     height: 50,
